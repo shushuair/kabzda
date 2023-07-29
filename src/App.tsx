@@ -1,46 +1,103 @@
-import React, {useState} from 'react';
+import React, {useReducer, useState} from 'react';
 import './App.css';
-// import {UncontrolledAcc} from "./components/Acc/UncontrolledAcc";
-import {Rating, RatingValueType} from "./components/Rating/Rating";
-import {Acc} from "./components/Acc/Acc";
-import {OnOff} from "./components/OnOff/OnOff";
-import {UncontrolledAcc} from "./components/Acc/UncontrolledAcc";
-// import {UncontrolledOnOff} from "./components/UncontrolledOnOff/UncontrolledOnOff";
+import {Rating} from "./components/Rating";
+import {Accordion} from "./components/Accordion";
+import {OnOff} from "./components/OnOff";
+import {HandmadeSelector} from "./components/HandmadeSelector";
+import {v1} from "uuid"
+import {MemoTest} from "./components/MemoTest";
+import {MemoCounter} from "./components/MemoCounter";
+import {UseEffect} from "./components/UseEffect";
+import {SetTimeoutExample} from "./components/SetTimeoutExample";
 
-
-function App() {
-    let [ratingValue, setRatingValue] = useState<RatingValueType>(0)
-    let [accCollapsed, setAccCollapsed] = useState<boolean>(false)
-    // let [switchOn, setSwitchOn] = useState<boolean>(false)
-
-  return (
-      <div>
-          {/*<OnOff on={switchOn} onChange={(on)=>{setSwitchOn(on)}}/>*/}
-          {/*<UncontrolledOnOff onChange={setSwitchOn}/> {switchOn.toString()}**/}
-
-          <UncontrolledAcc titleValue={"Menu"} />
-            <Rating
-                value={ratingValue}
-                onClick={setRatingValue}
-            />
-          <PageTitle title={"this is App component"}/>
-          {/*<UncontrolledRating />*/}
-
-          {/*<Rating value = {5} />*/}
-
-          {/*<Acc*/}
-          {/*    titleValue={"Menu"}*/}
-          {/*    collapsed={accCollapsed}*/}
-          {/*    onChange={() => {setAccCollapsed(!accCollapsed)} } />*/}
-
-      </div>
-  )
+export type SelectorItemTypes = {
+    id: string
+    title: string
+    value: string
+}
+export type ActionType = {
+    type: string
+}
+export type StateType = {
+    collapsed: boolean
 }
 
-type PageTitlePropsType = {title:string}
-const PageTitle = (props: PageTitlePropsType) => {
-    return <h1>{props.title}</h1>
+export const reducer = (state: StateType, action: ActionType) => {
+    switch (action.type){
+        case "SET-COLLAPSED" :
+            return {...state, collapsed: !state.collapsed}
+        default:
+            return state
+    }
 }
 
+export function App() {
 
-export default App;
+    const [collapsedValue, setCollapsedValue] = useState<boolean>(false)
+
+    const [selectValue, setSelectValue] = useState('2')
+    const [collapsedSecondValue, dispatch] = useReducer(reducer, {collapsed: false})
+    const [ratingValue, setRatingValue] = useState(0)
+
+
+    const setCollapsedHandler = () => {
+        setCollapsedValue(!collapsedValue)
+    }
+
+    const [squareOnOff, setSquareOnOff] = useState(false)
+    const [roundOnOff, setRoundOnOff] = useState(false)
+
+    const setSquareChecker = () => {
+        setSquareOnOff(!squareOnOff)
+    }
+    const setRoundChecker = () => {
+        setRoundOnOff(!roundOnOff)
+    }
+
+    const Accordion1 = React.memo(Accordion)
+    const OnOff1 = React.memo(OnOff)
+    const Rating1 = React.memo(Rating)
+    const HandmadeSelector1 = React.memo(HandmadeSelector)
+    return (
+        <div>
+            {/*<MemoCounter/>*/}
+            {/*<hr/>*/}
+            {/*<MemoTest/>*/}
+            {/*<hr/>*/}
+            {/*<Accordion1*/}
+            {/*    collapsed={collapsedValue}*/}
+            {/*    setCollapsedHandler={setCollapsedHandler}*/}
+            {/*/>*/}
+            {/*<Accordion1*/}
+            {/*    collapsed={collapsedSecondValue.collapsed}*/}
+            {/*    setCollapsedHandler={()=>{dispatch({type: 'SET-COLLAPSED'})}}*/}
+            {/*/>*/}
+            {/*<hr/>*/}
+            {/*<OnOff1*/}
+            {/*    squareOnOff={squareOnOff}*/}
+            {/*    roundOnOff={roundOnOff}*/}
+            {/*    setSquareChecker={setSquareChecker}*/}
+            {/*    setRoundChecker={setRoundChecker}*/}
+            {/*/>*/}
+            {/*<hr/>*/}
+            {/*<Rating1*/}
+            {/*    setRatingValue={setRatingValue}*/}
+            {/*    ratingValue={ratingValue}*/}
+            {/*/>*/}
+            {/*<hr/>*/}
+            {/*<HandmadeSelector1 value={selectValue}*/}
+            {/*                  items={[*/}
+            {/*                      {id: v1(), title: "Moscow", value: '1'},*/}
+            {/*                      {id: v1(), title: "Minsk", value: '2'},*/}
+            {/*                      {id: v1(), title: "Kiev", value: '3'},*/}
+            {/*                  ]}*/}
+            {/*                  setSelectValue={setSelectValue}*/}
+            {/*/>*/}
+            <hr/>
+            <UseEffect/>
+            <hr/>
+            <SetTimeoutExample/>
+            <hr/>
+        </div>
+    );
+}
